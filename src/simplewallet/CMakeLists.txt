@@ -1,4 +1,5 @@
 # Copyright (c) 2014-2019, The Monero Project
+# Copyright (c) 2019, The Rixe Project
 #
 # All rights reserved.
 #
@@ -61,5 +62,5 @@ target_link_libraries(simplewallet
     ${EXTRA_LIBRARIES})
 set_property(TARGET simplewallet
   PROPERTY
-    OUTPUT_NAME "monero-wallet-cli")
+    OUTPUT_NAME "rixe-wallet-cli")
 install(TARGETS simplewallet DESTINATION bin)
