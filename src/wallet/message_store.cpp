@@ -1,4 +1,5 @@
 // Copyright (c) 2018, The Monero Project
+// Copyright (c) 2019, The Rixe Project
 //
 // All rights reserved.
 //
@@ -450,7 +451,7 @@ bool message_store::get_signer_index_by_monero_address(const cryptonote::account
       return true;
     }
   }
-  MWARNING("No authorized signer with Monero address " << account_address_to_string(monero_address));
+  MWARNING("No authorized signer with Rixe address " << account_address_to_string(monero_address));
   return false;
 }
 
