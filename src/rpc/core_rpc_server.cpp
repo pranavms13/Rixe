@@ -1,4 +1,5 @@
 // Copyright (c) 2014-2019, The Monero Project
+// Copyright (c) 2019, The Rixe Project
 // 
 // All rights reserved.
 // 
@@ -2078,7 +2079,7 @@ namespace cryptonote
       return true;
     }
 
-    static const char software[] = "monero";
+    static const char software[] = "rixe";
 #ifdef BUILD_TAG
     static const char buildtag[] = BOOST_PP_STRINGIZE(BUILD_TAG);
     static const char subdir[] = "cli";
