@@ -91,7 +91,7 @@ As with many development projects, the repository on Github is considered to be 
 
 Rixe is a 100% community-sponsored endeavor. If you want to join our efforts, the easiest thing you can do is support the project financially. Both Monero and Bitcoin donations can be made to **donate.getmonero.org** if using a client that supports the [OpenAlias](https://openalias.org) standard. Alternatively you can send XMR to the Monero donation address via the `donate` command (type `help` in the command-line wallet for details).
 
-The Monero donation address is: `44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A` (viewkey: `f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501`)
+The Monero donation address is: `43bsxYrtyf4CcY8gAK9zNk6gfnYzg47w8XKT5G5ferTacBELvRfjcrr1uXaeGvnnm98V2Tunj81kEBiHgsg6uDghA6XxX2o` (viewkey: `59d3ee6937452734f78c35401d115ebc7afa63abdc318ed007830520d629fb0e`)
 
 The Bitcoin donation address is: `1KTexdemPdxSBcG55heUuTjDRYqbC5ZL8H`
 
