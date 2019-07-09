@@ -88,7 +88,7 @@ namespace cryptonote {
     const int emission_speed_factor = EMISSION_SPEED_FACTOR_PER_MINUTE - (target_minutes-1);
     
     const uint64_t blck1t = 2000000000000000000U;
-    if (median_size > 0 && already_generated_coins < blck1t) {
+    if (median_weight > 0 && already_generated_coins < blck1t) {
       reward = blck1t;
       return true;
     }
