@@ -7,3 +7,7 @@
 [submodule "external/trezor-common"]
 	path = external/trezor-common
 	url = https://github.com/trezor/trezor-common.git
+[submodule "external/unbound"]
+	path = external/unbound
+	url = https://github.com/pranavms13/unbound
+	branch = master
