@@ -44,6 +44,8 @@ using namespace epee;
 
 static const char *DEFAULT_DNS_PUBLIC_ADDR[] =
 {
+  "1.1.1.1",		// Cloudflare Fastest DNS
+  "8.8.8.8",		// Google DNS
   "194.150.168.168",    // CCC (Germany)
   "80.67.169.40",       // FDN (France)
   "89.233.43.71",       // http://censurfridns.dk (Denmark)
