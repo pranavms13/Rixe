@@ -256,10 +256,10 @@ namespace nodetool
 
   private:
     const std::vector<std::string> m_seed_nodes_list =
-    { "seeds.rixe.tech"
-    //, "seeds.moneroseeds.ae.org"
-    //, "seeds.moneroseeds.ch"
-    //, "seeds.moneroseeds.li"
+    { "seed1.rixe.tech"
+    , "seed2.rixe.tech"
+    , "seed3.rixe.tech"
+    , "seed4.rixe.tech"
     };
 
     bool islimitup=false;
