@@ -163,8 +163,8 @@ namespace cryptonote {
           else{
             base_reward = 0;
           }
-          if(base_reward > 2000000000000000U){
-              base_reward = 2000000000000000U;
+          if(base_reward > 200000000000000U){
+              base_reward = 200000000000000U;
               reward = base_reward;
           }
           else{
@@ -208,14 +208,15 @@ namespace cryptonote {
         else{
             reward = 0;
         }
-        if(reward > 2000000000000000U){
-              reward = 2000000000000000U;
+        if(reward > 200000000000000U){
+              reward = 200000000000000U;
         }
 
         }
         else{
         reward = reward_lo;
         }
+        reward = reward * 10;
         return true;
       }
   //-------------------------------------------------------------------------------------
