@@ -81,71 +81,102 @@ namespace cryptonote {
     return CRYPTONOTE_MAX_TX_SIZE;
   }
   //-----------------------------------------------------------------------------------------------
-  bool get_block_reward(size_t median_weight, size_t current_block_weight, uint64_t already_generated_coins, uint64_t &reward, uint8_t version) {
+  bool get_block_reward(size_t median_weight, size_t current_block_weight, uint64_t already_generated_coins, uint64_t &reward, uint8_t version, uint64_t ts, uint64_t l_timestamp) {
     static_assert(DIFFICULTY_TARGET_V2%60==0&&DIFFICULTY_TARGET_V1%60==0,"difficulty targets must be a multiple of 60");
-    const int target = version < 2 ? DIFFICULTY_TARGET_V1 : DIFFICULTY_TARGET_V2;
-    const int target_minutes = target / 60;
-    const int emission_speed_factor = EMISSION_SPEED_FACTOR_PER_MINUTE - (target_minutes-1);
-    
-    const uint64_t blck1t = 2000000000000000000U;
-    if (median_weight > 0 && already_generated_coins < blck1t) {
-      reward = blck1t;
-      return true;
-    }
+            const int target = version < 2 ? DIFFICULTY_TARGET_V1 : DIFFICULTY_TARGET_V2;
+            const int EMISSION_SPEED_FACTOR_PER_MINUTE_ = EMISSION_SPEED_FACTOR_PER_MINUTE; //version < 2 ? (int)EMISSION_SPEED_FACTOR_PER_MINUTE : (int)EMISSION_SPEED_FACTOR_PER_MINUTE_v2;
+            const int target_minutes = target / 60;
+            const int emission_speed_factor = EMISSION_SPEED_FACTOR_PER_MINUTE_ - (target_minutes-1);
 
-    uint64_t base_reward = (MONEY_SUPPLY - already_generated_coins) >> emission_speed_factor;
-    if (base_reward < FINAL_SUBSIDY_PER_MINUTE*target_minutes)
+            const uint64_t b_timestamp = ts;
+
+        uint64_t base_reward = (MONEY_SUPPLY - already_generated_coins) >> emission_speed_factor;
+        if (base_reward < FINAL_SUBSIDY_PER_MINUTE*target_minutes)
+        {
+          base_reward = FINAL_SUBSIDY_PER_MINUTE*target_minutes;
+        }
+
+        uint64_t full_reward_zone = get_min_block_weight(version);
+
+        //make it soft
+        if (median_weight < full_reward_zone) {
+          median_weight = full_reward_zone;
+        }
+
+        if (current_block_weight <= median_weight) {
+        if(version > 6){
+        if(b_timestamp > l_timestamp){
+          uint64_t l_time = b_timestamp - l_timestamp;
+          uint64_t d_time = l_time * base_reward;
+          base_reward = d_time/120;
+          }
+          else{
+            base_reward = 0;
+          }
+          if(base_reward > 200000000000000U){
+              base_reward = 200000000000000U;
+              reward = base_reward;
+          }
+          else{
+            reward = base_reward;
+          }
+         }
+          else{
+            reward = base_reward;
+          }
+          return true;
+        }
+
+        if(current_block_weight > 2 * median_weight) {
+          MERROR("Block cumulative size is too big: " << current_block_weight << ", expected less than " << 2 * median_weight);
+          return false;
+        }
+
+        assert(median_weight < std::numeric_limits<uint32_t>::max());
+        assert(current_block_weight < std::numeric_limits<uint32_t>::max());
+
+        uint64_t product_hi;
+        // BUGFIX: 32-bit saturation bug (e.g. ARM7), the result was being
+        // treated as 32-bit by default.
+        uint64_t multiplicand = 2 * median_weight - current_block_weight;
+        multiplicand *= current_block_weight;
+        uint64_t product_lo = mul128(base_reward, multiplicand, &product_hi);
+
+        uint64_t reward_hi;
+        uint64_t reward_lo;
+        div128_32(product_hi, product_lo, static_cast<uint32_t>(median_weight), &reward_hi, &reward_lo);
+        div128_32(reward_hi, reward_lo, static_cast<uint32_t>(median_weight), &reward_hi, &reward_lo);
+        assert(0 == reward_hi);
+        assert(reward_lo < base_reward);
+        if(version > 6){
+        if(b_timestamp > l_timestamp){
+            uint64_t l_time = b_timestamp - l_timestamp;
+            uint64_t d_time = l_time * reward_lo;
+            uint64_t n_reward = d_time/120;
+            reward = n_reward;
+        }
+        else{
+            reward = 0;
+        }
+        if(reward > 200000000000000U){
+              reward = 200000000000000U;
+        }
+
+        }
+        else{
+        reward = reward_lo;
+        }
+        return true;
+      }
+  //-------------------------------------------------------------------------------------
+    uint8_t get_account_address_checksum(const public_address_outer_blob& bl)
     {
-      base_reward = FINAL_SUBSIDY_PER_MINUTE*target_minutes;
+      const unsigned char* pbuf = reinterpret_cast<const unsigned char*>(&bl);
+      uint8_t summ = 0;
+      for(size_t i = 0; i!= sizeof(public_address_outer_blob)-1; i++)
+        summ += pbuf[i];
+      return summ;
     }
-
-    uint64_t full_reward_zone = get_min_block_weight(version);
-
-    //make it soft
-    if (median_weight < full_reward_zone) {
-      median_weight = full_reward_zone;
-    }
-
-    if (current_block_weight <= median_weight) {
-      reward = base_reward;
-      return true;
-    }
-
-    if(current_block_weight > 2 * median_weight) {
-      MERROR("Block cumulative weight is too big: " << current_block_weight << ", expected less than " << 2 * median_weight);
-      return false;
-    }
-
-    assert(median_weight < std::numeric_limits<uint32_t>::max());
-    assert(current_block_weight < std::numeric_limits<uint32_t>::max());
-
-    uint64_t product_hi;
-    // BUGFIX: 32-bit saturation bug (e.g. ARM7), the result was being
-    // treated as 32-bit by default.
-    uint64_t multiplicand = 2 * median_weight - current_block_weight;
-    multiplicand *= current_block_weight;
-    uint64_t product_lo = mul128(base_reward, multiplicand, &product_hi);
-
-    uint64_t reward_hi;
-    uint64_t reward_lo;
-    div128_32(product_hi, product_lo, static_cast<uint32_t>(median_weight), &reward_hi, &reward_lo);
-    div128_32(reward_hi, reward_lo, static_cast<uint32_t>(median_weight), &reward_hi, &reward_lo);
-    assert(0 == reward_hi);
-    assert(reward_lo < base_reward);
-
-    reward = reward_lo;
-    return true;
-  }
-  //------------------------------------------------------------------------------------
-  uint8_t get_account_address_checksum(const public_address_outer_blob& bl)
-  {
-    const unsigned char* pbuf = reinterpret_cast<const unsigned char*>(&bl);
-    uint8_t summ = 0;
-    for(size_t i = 0; i!= sizeof(public_address_outer_blob)-1; i++)
-      summ += pbuf[i];
-
-    return summ;
-  }
   //------------------------------------------------------------------------------------
   uint8_t get_account_integrated_address_checksum(const public_integrated_address_outer_blob& bl)
   {
