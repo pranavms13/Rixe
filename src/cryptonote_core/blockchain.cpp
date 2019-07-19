@@ -1255,23 +1255,23 @@ bool Blockchain::validate_miner_transaction(const block& b, size_t cumulative_bl
     }
   }
   
-  std::vector<size_t> last_blocks_sizes;
-  get_last_n_blocks_sizes(last_blocks_sizes, CRYPTONOTE_REWARD_BLOCKS_WINDOW);
+  std::vector<size_t> last_blocks_weights;
+  get_last_n_blocks_weights(last_blocks_weights, CRYPTONOTE_REWARD_BLOCKS_WINDOW);
 
   uint64_t l_timestamp = 0;
   uint64_t index = g_height - 1;
   if(version > 6){
         l_timestamp = m_db->get_block_timestamp(index);
-        if (!get_block_rewardb(epee::misc_utils::median(last_blocks_sizes), cumulative_block_size, already_generated_coins, base_reward, version, b.timestamp, l_timestamp))
+        if (!get_block_rewardb(epee::misc_utils::median(last_blocks_weights), cumulative_block_weight, already_generated_coins, base_reward, version, b.timestamp, l_timestamp))
           {
-            MERROR_VER("block size " << cumulative_block_size << " is bigger than allowed for this blockchain");
+            MERROR_VER("block size " << cumulative_block_weight << " is bigger than allowed for this blockchain");
             return false;
           }
     }
     else{
-        if (!get_block_reward(epee::misc_utils::median(last_blocks_sizes), cumulative_block_size, already_generated_coins, base_reward, version))
+        if (!get_block_reward(epee::misc_utils::median(last_blocks_weights), cumulative_block_weight, already_generated_coins, base_reward, version))
           {
-            MERROR_VER("block size " << cumulative_block_size << " is bigger than allowed for this blockchain");
+            MERROR_VER("block size " << cumulative_block_weight << " is bigger than allowed for this blockchain");
             return false;
           }
     }
