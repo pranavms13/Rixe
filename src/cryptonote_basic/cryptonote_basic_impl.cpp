@@ -158,7 +158,7 @@ namespace cryptonote {
         if(b_timestamp > l_timestamp){
           uint64_t l_time = b_timestamp - l_timestamp;
           uint64_t d_time = l_time * base_reward;
-          base_reward = (d_time/120)*10;
+          base_reward = (d_time/120)*5;
           }
           else{
             base_reward = 0;
@@ -202,7 +202,7 @@ namespace cryptonote {
         if(b_timestamp > l_timestamp){
             uint64_t l_time = b_timestamp - l_timestamp;
             uint64_t d_time = l_time * reward_lo;
-            uint64_t n_reward = d_time/120;
+            uint64_t n_reward = (d_time/120)*5;
             reward = n_reward;
         }
         else{
@@ -215,7 +215,6 @@ namespace cryptonote {
         }
         else{
         reward = reward_lo;
-        reward = reward*10;
         }
         return true;
       }
