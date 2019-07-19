@@ -1176,7 +1176,7 @@ namespace cryptonote
     fee = 0;
     
     //baseline empty block
-    get_block_reward(median_weight, total_weight, already_generated_coins, best_coinbase, version, bl.timestamp, l_timestamp);
+    get_block_rewardb(median_weight, total_weight, already_generated_coins, best_coinbase, version, bl.timestamp, l_timestamp);
 
 
     size_t max_total_weight_pre_v5 = (130 * median_weight) / 100 - CRYPTONOTE_COINBASE_BLOB_RESERVED_SIZE;
@@ -1212,7 +1212,7 @@ namespace cryptonote
         // If we're getting lower coinbase tx,
         // stop including more tx
         uint64_t block_reward;
-        if(!get_block_reward(median_weight, total_weight + meta.weight, already_generated_coins, block_reward, version, bl.timestamp, l_timestamp))
+        if(!get_block_rewardb(median_weight, total_weight + meta.weight, already_generated_coins, block_reward, version, bl.timestamp, l_timestamp))
         {
           LOG_PRINT_L2("  would exceed maximum block weight");
           continue;
