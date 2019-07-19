@@ -1276,7 +1276,7 @@ bool Blockchain::validate_miner_transaction(const block& b, size_t cumulative_bl
           }
     }
   
-  if (!get_block_reward(epee::misc_utils::median(last_blocks_weights), cumulative_block_weight, already_generated_coins, base_reward, version, b.timestamp, l_timestamp))
+  if (!get_block_reward(epee::misc_utils::median(last_blocks_weights), cumulative_block_weight, already_generated_coins, base_reward, version)
   {
     MERROR_VER("block weight " << cumulative_block_weight << " is bigger than allowed for this blockchain");
     return false;
@@ -3325,7 +3325,7 @@ bool Blockchain::check_fee(size_t tx_weight, uint64_t fee) const
     median = m_current_block_cumul_weight_limit / 2;
     const uint64_t blockchain_height = m_db->height();
     already_generated_coins = blockchain_height ? m_db->get_block_already_generated_coins(blockchain_height - 1) : 0;
-    if (!get_block_reward(median, 1, already_generated_coins, base_reward, version, 0, 0))
+    if (!get_block_reward(median, 1, already_generated_coins, base_reward, version))
       return false;
   }
 
@@ -3391,7 +3391,7 @@ uint64_t Blockchain::get_dynamic_base_fee_estimate(uint64_t grace_blocks) const
 
   uint64_t already_generated_coins = db_height ? m_db->get_block_already_generated_coins(db_height - 1) : 0;
   uint64_t base_reward;
-  if (!get_block_reward(median, 1, already_generated_coins, base_reward, version, 0, 0))
+  if (!get_block_reward(median, 1, already_generated_coins, base_reward, version))
   {
     MERROR("Failed to determine block reward, using placeholder " << print_money(BLOCK_REWARD_OVERESTIMATE) << " as a high bound");
     base_reward = BLOCK_REWARD_OVERESTIMATE;
