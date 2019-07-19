@@ -169,10 +169,12 @@ namespace cryptonote {
           }
           else{
             reward = base_reward;
+            reward = reward*10;
           }
          }
           else{
             reward = base_reward;
+            reward = reward*10;
           }
           return true;
         }
@@ -215,8 +217,8 @@ namespace cryptonote {
         }
         else{
         reward = reward_lo;
+        reward = reward*10;
         }
-        reward = reward * 10;
         return true;
       }
   //-------------------------------------------------------------------------------------
